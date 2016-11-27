@@ -50,3 +50,4 @@ fisheye
     // カメラの解像度 (0 ならカメラから取得)
     const int capture_width(1280);
     const int capture_height(720);
+
