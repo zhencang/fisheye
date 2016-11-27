@@ -36,7 +36,7 @@ fisheye
 
 設定項目は main.cpp の最初の部分にあります。
 
-* shader_selection に ExpanbshinShader.h の中にあるものの番号を設定してください。
+* shader_selection に ExpansionShader.h の中にあるものの番号を設定してください。
 
 
 ```
