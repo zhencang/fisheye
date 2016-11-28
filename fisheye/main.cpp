@@ -22,10 +22,10 @@ using namespace gg;
 //
 
 // 使用するシェーダー
-const int shader_selection(7);
+const int shader_selection(1);
 
 // 使用するデバイス
-const int capture_device(1);
+const int capture_device(0);
 
 // カメラの解像度 (0 ならカメラから取得)
 const int capture_width(1280);
@@ -35,7 +35,7 @@ const int capture_height(720);
 const int capture_fps(0);
 
 // メッシュの格子点数
-const int screen_samples(120000);
+const int screen_samples(1200);
 
 // 背景色
 const GLfloat background[] = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -162,8 +162,8 @@ int main()
     //   circle[3] = イメージサークルの中心の y 座標
     const GLfloat circle[] =
     {
-      shader_type[shader_selection].circle[0] + window.getArrowX() * 0.001f,
-      shader_type[shader_selection].circle[1] + window.getArrowY() * 0.001f,
+      shader_type[shader_selection].circle[0] + window.getShiftWheel() * 0.001f,
+      shader_type[shader_selection].circle[1] + window.getShiftWheel() * 0.001f,
       shader_type[shader_selection].circle[2] + (window.getShiftArrowX() - window.getControlArrowX()) * 0.001f,
       shader_type[shader_selection].circle[3] + (window.getShiftArrowY() + window.getControlArrowY()) * 0.001f
     };
