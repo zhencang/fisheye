@@ -42,5 +42,5 @@ const ExpansionShader shader_type[] =
   { "fisheye.vert",   "normal.frag", 2.050761871f, 2.050761871f, 0.0f, 0.0f },
 
   // 7: RICHO THETA のライブストリーミング映像
-  { "theta.vert",     "theta.frag",  0.25075f, 0.25075f, 0.0f, 0.0f }
+  { "theta.vert",     "theta.frag",  1.003f, 1.003f, 0.0f, -0.002f }
 };
