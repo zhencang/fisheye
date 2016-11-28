@@ -29,7 +29,7 @@ fisheye
 * Xcode で実行するときは Working Directory に "$PROJECT_DIR/fisheye" を設定してください。
 * マウスの左ボタンドラッグで視線を変更できます。
 * マウスのホイールを回すとスクリーンの画角を調整できます。
-* 矢印キーでレンズの縦横の画角を調整できます。
+* シフトキーを押しながらマウスのホイールを回すとレンズの画角を調整できます。
 * SHIFT キーを押しながら矢印キーで左目と右目の相対的な位置を調整できます。
 * CONTROL キーを押しながら矢印キーで両目のウィンドウ上の位置を調整できます。
     
@@ -39,7 +39,7 @@ fisheye
 設定項目は main.cpp の最初の部分にあります。
 
 * shader_selection に ExpansionShader.h の中にあるものの番号を設定してください。
-
+* UVC Blender を使うとき (shader_selection == 2, panorama.vert) は main.cpp で GL_CLAMP_TO_BORDER を GL_REPEAT に変更してください。
 
 ```
     // 使用するシェーダー

@@ -26,7 +26,7 @@ uniform sampler2D image;
 vec2 size = textureSize(image, 0);
 
 // イメージサークルのテクスチャ空間上のスケール
-vec2 scale = vec2(0.5 * size.y / size.x, -0.5) / circle.st;
+vec2 scale = vec2(0.5 * size.y / size.x, -0.5) * screen.st / circle.st;
 
 // イメージサークルのテクスチャ空間上の中心位置
 vec2 center = circle.pq + 0.5;
@@ -54,7 +54,7 @@ void main(void)
   vec4 vector = vec4(position, focal, 0.0);
   
   // テクスチャ座標
-  texcoord = vector.xy * scale * screen.st + center;
+  texcoord = vector.xy * scale + center;
   
   // 頂点位置をそのままラスタライザに送ればクリッピング空間全面に描く
   gl_Position = vec4(position, 0.0, 1.0);
