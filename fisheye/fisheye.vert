@@ -37,10 +37,22 @@ out vec2 texcoord;
 void main(void)
 {
   // 頂点位置
-  vec2 position = vec2(gl_VertexID >> 1, gl_InstanceID + 1 - (gl_VertexID & 1)) * gap - 1.0;
+  //   各頂点において gl_VertexID が 0, 1, 2, 3, ... のように割り当てられるから、
+  //     x = gl_VertexID >> 1      = 0, 0, 1, 1, 2, 2, 3, 3, ...
+  //     y = 1 - (gl_VertexID & 1) = 1, 0, 1, 0, 1, 0, 1, 0, ...
+  //   のように GL_TRIANGLE_STRIP 向けの頂点座標値が得られる。
+  //   y に gl_InstaceID を足せば glDrawArrayInstanced() のインスタンスごとに y が変化する。
+  //   これに格子の間隔 gap をかけて 1 を引けば縦横 [-1, 1] の範囲の点群が得られる。
+  //   さらに、これにスクリーンの大きさ screen.st をかけて中心位置 screen.pq を足せば、
+  //   スクリーン上の頂点位置 position が得られる。
+  int x = gl_VertexID >> 1;
+  int y = gl_InstanceID + 1 - (gl_VertexID & 1);
+  vec2 position = (vec2(x, y) * gap - 1.0) * screen.st + screen.pq;
 
   // 視線ベクトル
-  vec4 vector = normalize(rotation * vec4(position * screen.st + screen.pq, focal, 0.0));
+  //   原点を視点とすれば視線ベクトルは焦点距離 focal を Z 座標に用いて (position, focal)。
+  //   これを回転したあと正規化してその方向の視線単位ベクトルを得る。
+  vec4 vector = normalize(rotation * vec4(position, focal, 0.0));
   
   // テクスチャ座標
   texcoord = normalize(vector.xy) * scale * acos(vector.z) + center;

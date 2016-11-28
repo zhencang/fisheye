@@ -18,6 +18,21 @@ class Window
   // ウィンドウのアスペクト比
   GLfloat aspect;
 
+  // シフトキー
+  bool shift_key;
+
+  // コントロールキー
+  bool control_key;
+
+  // 矢印キー
+  int arrow[2];
+
+  // シフトキーを押しながら矢印キー
+  int shift_arrow[2];
+
+  // コントロールキーを押しながら矢印キー
+  int control_arrow[2];
+
   // マウスの現在位置
   double mouse_x, mouse_y;
 
@@ -26,6 +41,9 @@ class Window
 
   // シフトを押しながらマウスホイールの回転量
   double shift_wheel_rotation;
+
+  // コントロールを押しながらマウスホイールの回転量
+  double control_wheel_rotation;
 
   // 左ドラッグによるトラックボール
   GgTrackball trackball_left;
@@ -45,7 +63,8 @@ public:
   Window(int width = 640, int height = 480, const char *title = "GLFW Window",
     GLFWmonitor *monitor = nullptr, GLFWwindow *share = nullptr)
     : window(glfwCreateWindow(width, height, title, monitor, share))
-    , wheel_rotation(0.0), shift_wheel_rotation(0.0)
+    , arrow{ 0, 0 }, shift_arrow{ 0, 0 }, control_arrow{ 0, 0 }
+    , wheel_rotation(0.0), shift_wheel_rotation(0.0), control_wheel_rotation(0.0)
   {
     if (!window) return;
 
@@ -58,14 +77,14 @@ public:
     // ウィンドウのサイズ変更時に呼び出す処理を登録する
     glfwSetFramebufferSizeCallback(window, resize);
 
+    // キーボードを操作した時の処理を登録する
+    glfwSetKeyCallback(window, keyboard);
+
     // マウスボタンを操作したときの処理を登録する
     glfwSetMouseButtonCallback(window, mouse);
 
     // マウスホイール操作時に呼び出す処理を登録する
     glfwSetScrollCallback(window, wheel);
-
-    // キーボードを操作した時の処理を登録する
-    glfwSetKeyCallback(window, keyboard);
 
     // このインスタンスの this ポインタを記録しておく
     glfwSetWindowUserPointer(window, this);
@@ -113,6 +132,9 @@ public:
     // カラーバッファを入れ替える
     glfwSwapBuffers(window);
 
+    // シフトキーとコントロールキーの状態をリセットする
+    shift_key = control_key = false;
+
     // イベントを取り出す
     glfwPollEvents();
 
@@ -149,6 +171,95 @@ public:
       // トラックボール処理の範囲を設定する
       instance->trackball_left.region(width, height);
       instance->trackball_right.region(width, height);
+    }
+  }
+
+  // キーボードをタイプした時の処理
+  static void keyboard(GLFWwindow *window, int key, int scancode, int action, int mods)
+  {
+    // このインスタンスの this ポインタを得る
+    Window *const instance(static_cast<Window *>(glfwGetWindowUserPointer(window)));
+
+    if (instance)
+    {
+      if (action == GLFW_PRESS)
+      {
+        switch (key)
+        {
+        case GLFW_KEY_R:
+          // マウスホイールの回転量をリセットする
+          instance->wheel_rotation = 0.0;
+          instance->shift_wheel_rotation = 0.0;
+          instance->control_wheel_rotation = 0.0;
+
+          // 矢印キーの設定値をリセットする
+          instance->arrow[0] = instance->arrow[1] = 0;
+          instance->shift_arrow[0] = instance->shift_arrow[1] = 0;
+          instance->control_arrow[0] = instance->control_arrow[1] = 0;
+
+        case GLFW_KEY_O:
+          // トラックボールをリセットする
+          instance->trackball_left.reset();
+          instance->trackball_right.reset();
+          break;
+
+        case GLFW_KEY_SPACE:
+          break;
+
+        case GLFW_KEY_BACKSPACE:
+        case GLFW_KEY_DELETE:
+          break;
+
+        case GLFW_KEY_LEFT_SHIFT:
+        case GLFW_KEY_RIGHT_SHIFT:
+          instance->shift_key = true;
+          break;
+
+        case GLFW_KEY_LEFT_CONTROL:
+        case GLFW_KEY_RIGHT_CONTROL:
+          instance->control_key = true;
+          break;
+
+        case GLFW_KEY_UP:
+          if (instance->shift_key)
+            instance->shift_arrow[1]++;
+          else if (instance->control_key)
+            instance->control_arrow[1]++;
+          else
+            instance->arrow[1]++;
+          break;
+
+        case GLFW_KEY_DOWN:
+          if (instance->shift_key)
+            instance->shift_arrow[1]--;
+          else if (instance->control_key)
+            instance->control_arrow[1]--;
+          else
+            instance->arrow[1]--;
+          break;
+
+        case GLFW_KEY_RIGHT:
+          if (instance->shift_key)
+            instance->shift_arrow[0]++;
+          else if (instance->control_key)
+            instance->control_arrow[0]++;
+          else
+            instance->arrow[0]++;
+          break;
+
+        case GLFW_KEY_LEFT:
+          if (instance->shift_key)
+            instance->shift_arrow[0]--;
+          else if (instance->control_key)
+            instance->control_arrow[0]--;
+          else
+            instance->arrow[0]--;
+          break;
+
+        default:
+          break;
+        }
+      }
     }
   }
 
@@ -209,10 +320,10 @@ public:
 
     if (instance)
     {
-      if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT))
-      {
+      if (instance->shift_key)
         instance->shift_wheel_rotation += y;
-      }
+      else if (instance->control_key)
+        instance->control_wheel_rotation += y;
       else
       {
         instance->wheel_rotation += y;
@@ -220,55 +331,6 @@ public:
           instance->wheel_rotation = -100.0;
         else if (instance->wheel_rotation > 49.0)
           instance->wheel_rotation = 49.0;
-      }
-    }
-  }
-
-  // キーボードをタイプした時の処理
-  static void keyboard(GLFWwindow *window, int key, int scancode, int action, int mods)
-  {
-    // このインスタンスの this ポインタを得る
-    Window *const instance(static_cast<Window *>(glfwGetWindowUserPointer(window)));
-
-    if (instance)
-    {
-      if (action == GLFW_PRESS)
-      {
-        switch (key)
-        {
-          case GLFW_KEY_R:
-            // マウスホイールの回転量をリセットする
-            instance->wheel_rotation = 0.0;
-            instance->shift_wheel_rotation = 0.0;
-
-          case GLFW_KEY_O:
-            // トラックボールをリセットする
-            instance->trackball_left.reset();
-            instance->trackball_right.reset();
-            break;
-
-          case GLFW_KEY_SPACE:
-            break;
-
-          case GLFW_KEY_BACKSPACE:
-          case GLFW_KEY_DELETE:
-            break;
-
-          case GLFW_KEY_UP:
-            break;
-
-          case GLFW_KEY_DOWN:
-            break;
-
-          case GLFW_KEY_RIGHT:
-            break;
-
-          case GLFW_KEY_LEFT:
-            break;
-
-          default:
-            break;
-        }
       }
     }
   }
@@ -298,6 +360,63 @@ public:
     return aspect;
   }
 
+  // 矢印キーの現在の X 値を得る
+  GLfloat getArrowX() const
+  {
+    return static_cast<GLfloat>(arrow[0]);
+  }
+
+  // 矢印キーの現在の Y 値を得る
+  GLfloat getArrowY() const
+  {
+    return static_cast<GLfloat>(arrow[1]);
+  }
+
+  // 矢印キーの現在の値を得る
+  void getArrow(GLfloat *arrow) const
+  {
+    arrow[0] = getArrowX();
+    arrow[1] = getArrowY();
+  }
+
+  // シフトキーを押しながら矢印キーの現在の X 値を得る
+  GLfloat getShiftArrowX() const
+  {
+    return static_cast<GLfloat>(shift_arrow[0]);
+  }
+
+  // シフトキーを押しながら矢印キーの現在の Y 値を得る
+  GLfloat getShiftArrowY() const
+  {
+    return static_cast<GLfloat>(shift_arrow[1]);
+  }
+
+  // シフトキーを押しながら矢印キーの現在の値を得る
+  void getShiftArrow(GLfloat *shift_arrow) const
+  {
+    shift_arrow[0] = getShiftArrowX();
+    shift_arrow[1] = getShiftArrowY();
+  }
+
+  // コントロールキーを押しながら矢印キーの現在の X 値を得る
+  GLfloat getControlArrowX() const
+  {
+    return static_cast<GLfloat>(control_arrow[0]);
+  }
+
+  // コントロールキーを押しながら矢印キーの現在の Y 値を得る
+  GLfloat getControlArrowY() const
+  {
+    return static_cast<GLfloat>(control_arrow[1]);
+  }
+
+  // コントロールキーを押しながら矢印キーの現在の値を得る
+  void getControlArrow(GLfloat *control_arrow) const
+  {
+    control_arrow[0] = getControlArrowX();
+    control_arrow[1] = getControlArrowY();
+  }
+
   // マウスの X 座標を得る
   GLfloat getMouseX() const
   {
@@ -323,10 +442,16 @@ public:
     return static_cast<GLfloat>(wheel_rotation);
   }
 
-  // マウスホイールの現在の回転角を得る
+  // シフトを押しながらマウスホイールの現在の回転角を得る
   GLfloat getShiftWheel() const
   {
     return static_cast<GLfloat>(shift_wheel_rotation);
+  }
+
+  // コントロールを押しながらマウスホイールの現在の回転角を得る
+  GLfloat getControlWheel() const
+  {
+    return static_cast<GLfloat>(control_wheel_rotation);
   }
 
   // 左ボタンによるトラックボールの回転変換行列を得る

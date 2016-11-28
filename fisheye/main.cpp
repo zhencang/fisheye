@@ -22,10 +22,10 @@ using namespace gg;
 //
 
 // 使用するシェーダー
-const int shader_selection(1);
+const int shader_selection(7);
 
 // 使用するデバイス
-const int capture_device(0);
+const int capture_device(1);
 
 // カメラの解像度 (0 ならカメラから取得)
 const int capture_width(1280);
@@ -35,10 +35,10 @@ const int capture_height(720);
 const int capture_fps(0);
 
 // メッシュの格子点数
-const int screen_samples(1200);
+const int screen_samples(120000);
 
 // 背景色
-const GLfloat background[] = { 0.2f, 0.3f, 0.4f, 0.0f };
+const GLfloat background[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 //
 // メイン
@@ -105,6 +105,8 @@ int main()
   glDisable(GL_CULL_FACE);
 
   // テクスチャを作成する
+  //   ポリゴンでビューポート全体を埋めるので背景は表示されない。
+  //   GL_CLAMP_TO_BORDER にしておけばテクスチャの外が GL_TEXTURE_BORDER_COLOR になるので、これが背景色になる。
   const GLuint image([]() { GLuint image; glGenTextures(1, &image); return image; } ());
   glBindTexture(GL_TEXTURE_2D, image);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, camera.getWidth(), camera.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, NULL);
@@ -115,6 +117,7 @@ int main()
   glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, background);
 
   // 図形を作成する
+  //   頂点座標値を vertex shader で生成するので VBO は必要ない
   const GLuint shape([]() { GLuint shape; glGenVertexArrays(1, &shape); return shape; } ());
 
   // ウィンドウが開いている間繰り返す
@@ -132,13 +135,21 @@ int main()
     glUniform4fv(screenLoc, 1, screen);
 
     // スクリーンまでの焦点距離
+    //   window.getWheel() は [-100, 49] の範囲を返す。
+    //   したがって焦点距離 focal は [1 / 3, 1] の範囲になる。
+    //   これは焦点距離が長くなるにしたがって変化が大きくなる。
     glUniform1f(focalLoc, -50.0f / (window.getWheel() - 50.0f));
 
     // スクリーンの矩形の格子点数
+    //   標本点の数 (頂点数) n = x * y とするとき、これにアスペクト比 a = x / y をかければ、
+    //   a * n = x * x となるから x = sqrt(a * n), y = n / x; で求められる。
+    //   この方法は頂点属性を持っていないので実行中に標本点の数やアスペクト比の変更が容易。
     const GLsizei slices(static_cast<GLsizei>(sqrt(window.getAspect() * screen_samples)));
-    const GLsizei stacks(screen_samples / slices - 1);
+    const GLsizei stacks(screen_samples / slices - 1); // あとで 1 引くから先にひいておく。
 
     // スクリーンの格子間隔
+    //   クリッピング空間全体を埋める四角形は [-1, 1] の範囲すなわち縦横 2 の大きさだから、
+    //   それを縦横の (格子数 - 1) で割って格子の間隔を求める。
     glUniform2f(gapLoc, 2.0f / (slices - 1), 2.0f / stacks);
 
     // 視線の回転行列
@@ -149,13 +160,12 @@ int main()
     //   circle[1] = イメージサークルの y 方向の半径
     //   circle[2] = イメージサークルの中心の x 座標
     //   circle[3] = イメージサークルの中心の y 座標
-    const GLfloat adjust(window.getShiftWheel() * 0.0001f + 1.0f);
     const GLfloat circle[] =
     {
-      shader_type[shader_selection].circle[0] * adjust,
-      shader_type[shader_selection].circle[1] * adjust,
-      shader_type[shader_selection].circle[2],
-      shader_type[shader_selection].circle[3]
+      shader_type[shader_selection].circle[0] + window.getArrowX() * 0.001f,
+      shader_type[shader_selection].circle[1] + window.getArrowY() * 0.001f,
+      shader_type[shader_selection].circle[2] + (window.getShiftArrowX() - window.getControlArrowX()) * 0.001f,
+      shader_type[shader_selection].circle[3] + (window.getShiftArrowY() + window.getControlArrowY()) * 0.001f
     };
     glUniform4fv(circleLoc, 1, circle);
 
