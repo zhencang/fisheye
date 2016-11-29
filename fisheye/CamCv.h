@@ -65,14 +65,14 @@ class CamCv
   {
     for (;;)
     {
-      // キャプチャデバイスをロックする
+      // キャプチャデバイスをロックして
       mtx.lock();
 
-      // スレッドが実行中
+      // スレッドの実行中に
       if (run)
       {
-        // バッファが空でなかったら
-        if (buffer)
+        // バッファが空でないか次のフレームが到着していなければ
+        if (buffer || !camera.grab())
         {
           // ただちにロックを解除して
           mtx.unlock();
@@ -82,15 +82,11 @@ class CamCv
         }
         else
         {
-          // 次のフレームが到着していたら
-          if (camera.grab())
-          {
-            // フレームを切り出して
-            camera.retrieve(frame, 3);
+          // 到着したフレームを切り出して
+          camera.retrieve(frame, 3);
 
-            // 画像を更新する
-            buffer = frame.data;
-          }
+          // 画像を更新し
+          buffer = frame.data;
 
           // ロックを解除する
           mtx.unlock();
