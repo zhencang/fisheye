@@ -78,7 +78,7 @@ void main(void)
   // 前後のテクスチャの色をサンプリングする
   texcoord_f = (1.0 - angle) * orientation * radius_f + center_f;
   texcoord_b = (1.0 + angle) * orientation * radius_b + center_b;
-  
+
   // 頂点位置をそのままラスタライザに送ればクリッピング空間全面に描く
   gl_Position = vec4(position, 0.0, 1.0);
 }
