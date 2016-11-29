@@ -35,12 +35,12 @@ const ExpansionShader shader_type[] =
   // 4: 185°魚眼カメラ (FUJINON FE185C046HA-1 + SENTECH STC-MCE132U3V) : 3.2288591 / 2 (≒ 185°/ 2)
   { "fisheye.vert",   "normal.frag", 1.614429558f, 1.614429558f, 0.0f, 0.0f },
 
-  // 5: 220°魚眼カメラ (Kodak PIXPRO SP360 4K, 手振れ補正あり) : 3.8397243 / 2 (≒ 220°/ 2)
-  { "fisheye.vert",   "normal.frag", 1.919862177f, 1.919862177f, 0.0f, 0.0f },
+  // 5: 220°魚眼カメラ (Kodak PIXPRO SP360 4K, 手振れ補正あり) : 3.5953783 / 2 (≒ 206°/ 2)
+  { "fisheye.vert",   "normal.frag", 1.797689129f, 1.797689129f, 0.0f, 0.0f },
 
   // 6: 235°魚眼カメラ (Kodak PIXPRO SP360 4K, 手振れ補正なし) : 4.1015237 / 2 (≒ 235°/ 2)
   { "fisheye.vert",   "normal.frag", 2.050761871f, 2.050761871f, 0.0f, 0.0f },
 
-  // 7: RICHO THETA のライブストリーミング映像
+  // 7: RICHO THETA のライブストリーミング映像 : (手動調整で決めた値)
   { "theta.vert",     "theta.frag",  1.003f, 1.003f, 0.0f, -0.002f }
 };
