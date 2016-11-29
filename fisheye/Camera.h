@@ -75,15 +75,28 @@ public:
   // スレッドを停止する
   void stop()
   {
+    // キャプチャデバイスをロックする
+    mtx.lock();
+
+    // キャプチャスレッドが実行中なら
     if (run)
     {
-      // キャプチャスレッドのループを止める
-      mtx.lock();
+      // キャプチャスレッドのループを止めて
       run = false;
+
+      // ロックを解除し
       mtx.unlock();
 
-      // キャプチャスレッドが終了するのを待つ
+      // 少し待ってから
+      std::this_thread::sleep_for(std::chrono::milliseconds(100L));
+
+      // 合流する
       thr.join();
+    }
+    else
+    {
+      // ロックを解除する
+      mtx.unlock();
     }
   }
 

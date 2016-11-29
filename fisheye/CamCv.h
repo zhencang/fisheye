@@ -63,35 +63,46 @@ class CamCv
   // フレームをキャプチャする
   virtual void capture()
   {
-    // スレッドが実行中の間
-    while (run)
+    for (;;)
     {
       // キャプチャデバイスをロックする
       mtx.lock();
 
-      // バッファが空でなかったら
-      if (buffer)
+      // スレッドが実行中
+      if (run)
+      {
+        // バッファが空でなかったら
+        if (buffer)
+        {
+          // ただちにロックを解除して
+          mtx.unlock();
+
+          // 少し待つ
+          std::this_thread::sleep_for(std::chrono::milliseconds(10L));
+        }
+        else
+        {
+          // 次のフレームが到着していたら
+          if (camera.grab())
+          {
+            // フレームを切り出して
+            camera.retrieve(frame, 3);
+
+            // 画像を更新する
+            buffer = frame.data;
+          }
+
+          // ロックを解除する
+          mtx.unlock();
+        }
+      }
+      else
       {
         // ロックを解除して
         mtx.unlock();
 
-        // 少し待つ
-        std::this_thread::sleep_for(std::chrono::milliseconds(10L));
-      }
-      else
-      {
-        // 次のフレームが到着していたら
-        if (camera.grab())
-        {
-          // フレームを切り出す
-          camera.retrieve(frame, 3);
-
-          // 画像を更新する
-          buffer = frame.data;
-        }
-
-        // キャプチャデバイスをアンロックする
-        mtx.unlock();
+        // スレッドを終了する
+        break;
       }
     }
   }
