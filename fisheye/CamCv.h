@@ -49,8 +49,8 @@ class CamCv
       // キャプチャされる画像のフォーマットを設定する
       format = GL_BGR;
 
-      // キャプチャ用のメモリを確保する
-      frame.create(width, height, CV_8UC3);
+      // フレームを取り出してキャプチャ用のメモリを確保する
+      camera.retrieve(frame, 3);
 
       // 画像がキャプチャされたことを記録する
       buffer = frame.data;
@@ -63,44 +63,36 @@ class CamCv
   // フレームをキャプチャする
   virtual void capture()
   {
-    for (;;)
+    // あらかじめキャプチャデバイスをロックして
+    mtx.lock();
+
+    // スレッドが実行可の間
+    while (run)
     {
-      // キャプチャデバイスをロックして
-      mtx.lock();
-
-      // スレッドの実行中に
-      if (run)
+      // バッファが空のとき次のフレームが到着していれば
+      if (!buffer && camera.grab())
       {
-        // バッファが空でないか次のフレームが到着していなければ
-        if (buffer || !camera.grab())
-        {
-          // ただちにロックを解除して
-          mtx.unlock();
+        // 到着したフレームを切り出して
+        camera.retrieve(frame, 3);
 
-          // 少し待つ
-          std::this_thread::sleep_for(std::chrono::milliseconds(10L));
-        }
-        else
-        {
-          // 到着したフレームを切り出して
-          camera.retrieve(frame, 3);
-
-          // 画像を更新し
-          buffer = frame.data;
-
-          // ロックを解除する
-          mtx.unlock();
-        }
+        // 画像を更新し
+        buffer = frame.data;
       }
       else
       {
-        // ロックを解除して
+        // フレームが切り出せなければロックを解除して
         mtx.unlock();
 
-        // スレッドを終了する
-        break;
+        // 他のスレッドがリソースにアクセスするために少し待ってから
+        std::this_thread::sleep_for(std::chrono::milliseconds(10L));
+
+        // またキャプチャデバイスをロックする
+        mtx.lock();
       }
     }
+
+    // 終わるときはロックを解除する
+    mtx.unlock();
   }
 
 public:
@@ -113,6 +105,8 @@ public:
   // デストラクタ
   virtual ~CamCv()
   {
+    // スレッドを停止する
+    stop();
   }
 
   // カメラから入力する
