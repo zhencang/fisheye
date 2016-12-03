@@ -66,7 +66,7 @@ void main(void)
 
   //float angle = acos(vector.z) * 0.63661977 - 1.0;
   // この方向ベクトルの相対的な仰角
-  //   acos(θ) * 2 / π - 1 → [0, 2]
+  //   acos(vector.z) * 2 / π - 1 → [-1, 1]
   float angle = acos(vector.z) * 0.63661977 - 1.0;
 
   // 前後のテクスチャの混合比
