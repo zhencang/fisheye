@@ -13,11 +13,11 @@ uniform vec4 screen;
 // スクリーンまでの焦点距離
 uniform float focal;
 
-// スクリーンを回転する変換行列
-uniform mat4 rotation;
-
 // イメージサークルの半径と中心位置
 uniform vec4 circle;
+
+// スクリーンを回転する変換行列
+uniform mat4 rotation;
 
 // テクスチャ
 uniform sampler2D image;

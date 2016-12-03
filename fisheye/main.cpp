@@ -93,11 +93,11 @@ int main()
   }
 
   // uniform 変数の場所を指定する
+  const GLuint gapLoc(glGetUniformLocation(shader, "gap"));
   const GLuint screenLoc(glGetUniformLocation(shader, "screen"));
   const GLuint focalLoc(glGetUniformLocation(shader, "focal"));
-  const GLuint gapLoc(glGetUniformLocation(shader, "gap"));
-  const GLuint rotationLoc(glGetUniformLocation(shader, "rotation"));
   const GLuint circleLoc(glGetUniformLocation(shader, "circle"));
+  const GLuint rotationLoc(glGetUniformLocation(shader, "rotation"));
   const GLuint imageLoc(glGetUniformLocation(shader, "image"));
 
   // 隠面消去を設定する
@@ -126,6 +126,18 @@ int main()
     // シェーダプログラムの使用を開始する
     glUseProgram(shader);
 
+    // スクリーンの矩形の格子点数
+    //   標本点の数 (頂点数) n = x * y とするとき、これにアスペクト比 a = x / y をかければ、
+    //   a * n = x * x となるから x = sqrt(a * n), y = n / x; で求められる。
+    //   この方法は頂点属性を持っていないので実行中に標本点の数やアスペクト比の変更が容易。
+    const GLsizei slices(static_cast<GLsizei>(sqrt(window.getAspect() * screen_samples)));
+    const GLsizei stacks(screen_samples / slices - 1); // 描画するインスタンスの数なので先に 1 を引いておく。
+
+    // スクリーンの格子間隔
+    //   クリッピング空間全体を埋める四角形は [-1, 1] の範囲すなわち縦横 2 の大きさだから、
+    //   それを縦横の (格子数 - 1) で割って格子の間隔を求める。
+    glUniform2f(gapLoc, 2.0f / (slices - 1), 2.0f / stacks);
+
     // スクリーンのサイズと中心位置
     //   screen[0] = (right - left) / 2
     //   screen[1] = (top - bottom) / 2
@@ -140,21 +152,6 @@ int main()
     //   これは焦点距離が長くなるにしたがって変化が大きくなる。
     glUniform1f(focalLoc, -50.0f / (window.getWheel() - 50.0f));
 
-    // スクリーンの矩形の格子点数
-    //   標本点の数 (頂点数) n = x * y とするとき、これにアスペクト比 a = x / y をかければ、
-    //   a * n = x * x となるから x = sqrt(a * n), y = n / x; で求められる。
-    //   この方法は頂点属性を持っていないので実行中に標本点の数やアスペクト比の変更が容易。
-    const GLsizei slices(static_cast<GLsizei>(sqrt(window.getAspect() * screen_samples)));
-    const GLsizei stacks(screen_samples / slices - 1); // あとで 1 引くから先にひいておく。
-
-    // スクリーンの格子間隔
-    //   クリッピング空間全体を埋める四角形は [-1, 1] の範囲すなわち縦横 2 の大きさだから、
-    //   それを縦横の (格子数 - 1) で割って格子の間隔を求める。
-    glUniform2f(gapLoc, 2.0f / (slices - 1), 2.0f / stacks);
-
-    // 視線の回転行列
-    glUniformMatrix4fv(rotationLoc, 1, GL_FALSE, window.getLeftTrackball().get());
-
     // テクスチャの半径と中心位置
     //   circle[0] = イメージサークルの x 方向の半径
     //   circle[1] = イメージサークルの y 方向の半径
@@ -168,6 +165,9 @@ int main()
       shader_type[shader_selection].circle[3] + (window.getShiftArrowY() + window.getControlArrowY()) * 0.001f
     };
     glUniform4fv(circleLoc, 1, circle);
+
+    // 視線の回転行列
+    glUniformMatrix4fv(rotationLoc, 1, GL_FALSE, window.getLeftTrackball().get());
 
     // キャプチャした画像をテクスチャに転送する
     glActiveTexture(GL_TEXTURE0);
