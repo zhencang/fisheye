@@ -28,8 +28,8 @@ const int shader_selection(1);
 const int capture_device(0);
 
 // カメラの解像度 (0 ならカメラから取得)
-const int capture_width(1280);
-const int capture_height(720);
+const int capture_width(shader_type[shader_selection].size[0]);
+const int capture_height(shader_type[shader_selection].size[1]);
 
 // カメラのフレームレート (0 ならカメラから取得)
 const int capture_fps(0);
