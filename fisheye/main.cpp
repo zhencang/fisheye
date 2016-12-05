@@ -27,12 +27,21 @@ const int shader_selection(1);
 // 使用するデバイス
 const int capture_device(0);
 
+// バーテックスシェーダのソースファイル名
+const char *const capture_vsrc(shader_type[shader_selection].vsrc);
+
+// フラグメントシェーダのソースファイル名
+const char *const capture_fsrc(shader_type[shader_selection].fsrc);
+
 // カメラの解像度 (0 ならカメラから取得)
 const int capture_width(shader_type[shader_selection].size[0]);
 const int capture_height(shader_type[shader_selection].size[1]);
 
 // カメラのフレームレート (0 ならカメラから取得)
 const int capture_fps(0);
+
+// 投影像の配置
+const float *const capture_circle(shader_type[shader_selection].circle);
 
 // メッシュの格子点数
 const int screen_samples(1200);
@@ -84,7 +93,7 @@ int main()
   }
 
   // 図形描画用のシェーダプログラムを読み込む
-  const GLuint shader(ggLoadShader(shader_type[shader_selection].vsrc, shader_type[shader_selection].fsrc));
+  const GLuint shader(ggLoadShader(capture_vsrc, capture_fsrc));
   if (!shader)
   {
     // シェーダが読み込めなかった
@@ -159,10 +168,10 @@ int main()
     //   circle[3] = イメージサークルの中心の y 座標
     const GLfloat circle[] =
     {
-      shader_type[shader_selection].circle[0] + window.getShiftWheel() * 0.001f,
-      shader_type[shader_selection].circle[1] + window.getShiftWheel() * 0.001f,
-      shader_type[shader_selection].circle[2] + (window.getShiftArrowX() - window.getControlArrowX()) * 0.001f,
-      shader_type[shader_selection].circle[3] + (window.getShiftArrowY() + window.getControlArrowY()) * 0.001f
+      capture_circle[0] + window.getShiftWheel() * 0.001f,
+      capture_circle[1] + window.getShiftWheel() * 0.001f,
+      capture_circle[2] + (window.getShiftArrowX() - window.getControlArrowX()) * 0.001f,
+      capture_circle[3] + (window.getShiftArrowY() + window.getControlArrowY()) * 0.001f
     };
     glUniform4fv(circleLoc, 1, circle);
 
