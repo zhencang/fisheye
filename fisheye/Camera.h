@@ -44,7 +44,7 @@ protected:
   bool run;
 
   // フレームをキャプチャする
-  virtual void capture() = 0;
+  virtual void capture() {};
 
 public:
 
@@ -103,16 +103,16 @@ public:
   }
 
   // Ovrvision Pro の露出を上げる
-  virtual void increaseExposure() = 0;
+  virtual void increaseExposure() {};
 
   // Ovrvision Pro の露出を下げる
-  virtual void decreaseExposure() = 0;
+  virtual void decreaseExposure() {};
 
   // Ovrvision Pro の利得を上げる
-  virtual void increaseGain() = 0;
+  virtual void increaseGain() {};
 
   // Ovrvision Pro の利得を下げる
-  virtual void decreaseGain() = 0;
+  virtual void decreaseGain() {};
 
   // カメラをロックして画像をテクスチャに転送する
   void transmit()
