@@ -66,7 +66,10 @@ public:
   // スレッドを起動する
   void start()
   {
+    // スレッドが起動状態であることを記録しておく
     run = true;
+
+    // スレッドを起動する
     thr = std::thread([this](){ this->capture(); });
   }
 

@@ -54,9 +54,12 @@ class CamCv
 
       // 画像がキャプチャされたことを記録する
       buffer = frame.data;
+
+      // カメラが使える
       return true;
     }
 
+    // カメラが使えない
     return false;
   }
 
