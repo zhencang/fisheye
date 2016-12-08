@@ -31,8 +31,8 @@ vec2 scale = vec2(-0.15915494, -0.31830989) / circle.st;
 // イメージサークルのテクスチャ空間上の中心位置
 vec2 center = circle.pq + 0.5;
 
-// テクスチャ座標
-out vec2 texcoord;
+// 視線ベクトル
+out vec3 vector;
 
 void main(void)
 {
@@ -52,10 +52,7 @@ void main(void)
   // 視線ベクトル
   //   原点を視点とすれば視線ベクトルは焦点距離 focal を Z 座標に用いて (position, focal)。
   //   これを回転したあと正規化してその方向の視線単位ベクトルを得る。
-  vec4 vector = normalize(rotation * vec4(position, focal, 0.0));
-
-  // テクスチャ座標
-  texcoord = atan(vector.xy, vec2(vector.z, length(vector.xz))) * scale + center;
+  vector = (rotation * vec4(position, -focal, 0.0)).xyz;
 
   // 頂点位置をそのままラスタライザに送ればクリッピング空間全面に描く
   gl_Position = vec4(position, 0.0, 1.0);

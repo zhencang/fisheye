@@ -24,6 +24,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7D1828451DF98D7800C66A44 /* panorama.frag */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = panorama.frag; sourceTree = "<group>"; };
 		7D33F7571DE524E90094FE12 /* fisheye */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fisheye; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D33F75A1DE524E90094FE12 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		7D33F7611DE525140094FE12 /* gg.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = gg.cpp; sourceTree = "<group>"; };
@@ -81,6 +82,7 @@
 				7DEBC5351DEA7CB8003AFDF7 /* fixed.vert */,
 				7DEBC5381DEA7CC8003AFDF7 /* rectangle.vert */,
 				7DEBC5371DEA7CC8003AFDF7 /* panorama.vert */,
+				7D1828451DF98D7800C66A44 /* panorama.frag */,
 				7DEBC5341DEA7CB8003AFDF7 /* fisheye.vert */,
 				7DEBC5361DEA7CBE003AFDF7 /* normal.frag */,
 				7DEBC53A1DEA7CC8003AFDF7 /* theta.vert */,

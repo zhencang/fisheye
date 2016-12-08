@@ -29,7 +29,7 @@ uniform sampler2D image;
 vec2 size = textureSize(image, 0);
 
 // イメージサークルのテクスチャ空間上のスケール
-vec2 scale = vec2(0.5 * size.y / size.x, -0.5) * screen.st / circle.st;
+vec2 scale = vec2(-0.5 * size.y / size.x, 0.5) * screen.st / circle.st;
 
 // イメージサークルのテクスチャ空間上の中心位置
 vec2 center = circle.pq + 0.5;
@@ -55,7 +55,7 @@ void main(void)
   // 視線ベクトル
   //   原点を視点とすれば視線ベクトルは焦点距離 focal を Z 座標に用いて (position, focal)。
   //   これを回転したあと正規化してその方向の視線単位ベクトルを得る。
-  vec4 vector = normalize(rotation * vec4(position, focal, 0.0));
+  vec4 vector = normalize(rotation * vec4(position, -focal, 0.0));
 
   // テクスチャ座標
   texcoord = vector.xy * scale / vector.z + center;
