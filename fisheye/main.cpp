@@ -176,7 +176,7 @@ int main()
     glUniform4fv(circleLoc, 1, circle);
 
     // 視線の回転行列
-    glUniformMatrix4fv(rotationLoc, 1, GL_FALSE, window.getLeftTrackball().get());
+    glUniformMatrix4fv(rotationLoc, 1, GL_TRUE, window.getLeftTrackball().get());
 
     // キャプチャした画像をテクスチャに転送する
     glActiveTexture(GL_TEXTURE0);
