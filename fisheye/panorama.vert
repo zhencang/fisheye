@@ -13,26 +13,11 @@ uniform vec4 screen;
 // スクリーンまでの焦点距離
 uniform float focal;
 
-// イメージサークルの半径と中心位置
-uniform vec4 circle;
-
 // スクリーンを回転する変換行列
 uniform mat4 rotation;
 
-// テクスチャ
-uniform sampler2D image;
-
-// テクスチャのサイズ
-vec2 size = textureSize(image, 0);
-
-// イメージサークルのテクスチャ空間上のスケール
-vec2 scale = vec2(-0.15915494, -0.31830989) / circle.st;
-
-// イメージサークルのテクスチャ空間上の中心位置
-vec2 center = circle.pq + 0.5;
-
 // 視線ベクトル
-out vec3 vector;
+out vec4 vector;
 
 void main(void)
 {
@@ -52,7 +37,7 @@ void main(void)
   // 視線ベクトル
   //   原点を視点とすれば視線ベクトルは焦点距離 focal を Z 座標に用いて (position, focal)。
   //   これを回転したあと正規化してその方向の視線単位ベクトルを得る。
-  vector = (rotation * vec4(position, -focal, 0.0)).xyz;
+  vector = rotation * vec4(position, -focal, 0.0);
 
   // 頂点位置をそのままラスタライザに送ればクリッピング空間全面に描く
   gl_Position = vec4(position, 0.0, 1.0);

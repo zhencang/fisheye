@@ -21,7 +21,7 @@ vec2 scale = vec2(-0.15915494, -0.31830989) / circle.st;
 vec2 center = circle.pq + 0.5;
 
 // 視線ベクトル
-in vec3 vector;
+in vec4 vector;
 
 // フラグメントの色
 layout (location = 0) out vec4 fc;
@@ -29,7 +29,7 @@ layout (location = 0) out vec4 fc;
 void main(void)
 {
   // 視線ベクトルを正規化する
-  vec3 v = normalize(vector);
+  vec4 v = normalize(vector);
 
   // テクスチャ座標を求める
   vec2 texcoord = atan(v.xy, vec2(v.z, length(v.xz))) * scale + center;
