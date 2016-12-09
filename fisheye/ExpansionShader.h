@@ -29,7 +29,7 @@ const ExpansionShader shader_type[] =
   // 1: 通常のカメラで視点を回転
   { "rectangle.vert", "normal.frag",   1280,  720, 1.0f, 1.0f, 0.0f, 0.0f },
 
-  // 2: 正距円筒図法のパノラマ画像
+  // 2: 正距円筒図法の画像 (縦線を消すには GL_CLAMP_TO_BORDER を GL_REPEAT にしてください)
   { "panorama.vert",  "panorama.frag", 1280,  720, 1.0f, 1.0f, 0.0f, 0.0f },
 
   // 3: 180°魚眼カメラ : 3.1415927 / 2 (≒ 180°/ 2)

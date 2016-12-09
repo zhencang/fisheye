@@ -37,7 +37,7 @@ void main(void)
   // 視線ベクトル
   //   原点を視点とすれば視線ベクトルは焦点距離 focal を Z 座標に用いて (position, focal)。
   //   これを回転したあと正規化してその方向の視線単位ベクトルを得る。
-  vector = rotation * vec4(position, -focal, 0.0);
+  vector = rotation * vec4(position, focal, 0.0);
 
   // 頂点位置をそのままラスタライザに送ればクリッピング空間全面に描く
   gl_Position = vec4(position, 0.0, 1.0);

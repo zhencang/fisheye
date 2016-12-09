@@ -21,7 +21,7 @@ using namespace gg;
 // 設定
 //
 
-// 使用するシェーダー
+// 使用するシェーダー (ExpansionShader.h の中から選んでください)
 const int shader_selection(1);
 
 // 使用するデバイス
@@ -176,7 +176,7 @@ int main()
     glUniform4fv(circleLoc, 1, circle);
 
     // 視線の回転行列
-    glUniformMatrix4fv(rotationLoc, 1, GL_TRUE, window.getLeftTrackball().get());
+    glUniformMatrix4fv(rotationLoc, 1, GL_FALSE, window.getLeftTrackball().get());
 
     // キャプチャした画像をテクスチャに転送する
     glActiveTexture(GL_TEXTURE0);

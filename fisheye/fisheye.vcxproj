@@ -157,6 +157,7 @@
     <None Include="packages.config" />
     <None Include="normal.frag" />
     <None Include="fixed.vert" />
+    <None Include="panorama.frag" />
     <None Include="panorama.vert" />
     <None Include="rectangle.vert" />
     <None Include="theta.frag" />
