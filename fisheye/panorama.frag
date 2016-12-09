@@ -15,7 +15,7 @@ uniform sampler2D image;
 vec2 size = textureSize(image, 0);
 
 // イメージサークルのテクスチャ空間上のスケール
-vec2 scale = vec2(-0.15915494, -0.31830989) / circle.st;
+vec2 scale = vec2(0.15915494, -0.31830989) / circle.st;
 
 // イメージサークルのテクスチャ空間上の中心位置
 vec2 center = circle.pq + 0.5;

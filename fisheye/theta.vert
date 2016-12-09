@@ -27,7 +27,7 @@ vec2 size = textureSize(image, 0);
 
 // イメージサークルの半径と中心
 vec2 radius = circle.st * vec2(0.25, 0.25 * size.x / size.y);
-vec2 center = vec2(radius.s - circle.p, radius.t + circle.q);
+vec2 center = vec2(radius.s - circle.p, radius.t - circle.q);
 
 // 前後のイメージサークルの半径
 vec2 radius_f = vec2(-radius.s, radius.t);
@@ -64,7 +64,6 @@ void main(void)
   //   これを回転したあと正規化してスクリーン回転後の頂点方向の視線単位ベクトルを得る。
   vec4 vector = normalize(rotation * vec4(position, focal, 0.0));
 
-  //float angle = acos(vector.z) * 0.63661977 - 1.0;
   // この方向ベクトルの相対的な仰角
   //   acos(vector.z) * 2 / π - 1 → [-1, 1]
   float angle = acos(vector.z) * 0.63661977 - 1.0;
