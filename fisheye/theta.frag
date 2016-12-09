@@ -5,7 +5,7 @@
 //   RICOH THETA S のライブストリーミング映像の平面展開
 //
 
-// テクスチャ
+// 背景テクスチャ
 uniform sampler2D image;
 
 // テクスチャ座標

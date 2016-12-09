@@ -27,17 +27,17 @@ void main(void)
   //     y = 1 - (gl_VertexID & 1) = 1, 0, 1, 0, 1, 0, 1, 0, ...
   //   のように GL_TRIANGLE_STRIP 向けの頂点座標値が得られる。
   //   y に gl_InstaceID を足せば glDrawArrayInstanced() のインスタンスごとに y が変化する。
-  //   これに格子の間隔 gap をかけて 1 を引けば縦横 [-1, 1] の範囲の点群が得られる。
-  //   さらに、これにスクリーンの大きさ screen.st をかけて中心位置 screen.pq を足せば、
-  //   スクリーン上の頂点位置 position が得られる。
+  //   これに格子の間隔 gap をかけて 1 を引けば縦横 [-1, 1] の範囲の点群 position が得られる。
   int x = gl_VertexID >> 1;
   int y = gl_InstanceID + 1 - (gl_VertexID & 1);
-  vec2 position = (vec2(x, y) * gap - 1.0) * screen.st + screen.pq;
+  vec2 position = vec2(x, y) * gap - 1.0;
 
   // 視線ベクトル
-  //   原点を視点とすれば視線ベクトルは焦点距離 focal を Z 座標に用いて (position, focal)。
+  //   position にスクリーンの大きさ screen.st をかけて中心位置 screen.pq を足せば、
+  //   スクリーン上の点の位置が得られるから、原点にある視点からこの点に向かう視線は、
+  //   焦点距離 focal を Z 座標に用いて (position, focal) となる。
   //   これを回転したあと正規化してその方向の視線単位ベクトルを得る。
-  vector = rotation * vec4(position, focal, 0.0);
+  vector = rotation * vec4(position * screen.st + screen.pq, focal, 0.0);
 
   // 頂点位置をそのままラスタライザに送ればクリッピング空間全面に描く
   gl_Position = vec4(position, 0.0, 1.0);
