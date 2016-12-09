@@ -105,8 +105,8 @@ int main()
   const GLuint gapLoc(glGetUniformLocation(shader, "gap"));
   const GLuint screenLoc(glGetUniformLocation(shader, "screen"));
   const GLuint focalLoc(glGetUniformLocation(shader, "focal"));
-  const GLuint circleLoc(glGetUniformLocation(shader, "circle"));
   const GLuint rotationLoc(glGetUniformLocation(shader, "rotation"));
+  const GLuint circleLoc(glGetUniformLocation(shader, "circle"));
   const GLuint imageLoc(glGetUniformLocation(shader, "image"));
 
   // 隠面消去を設定する
@@ -161,6 +161,9 @@ int main()
     //   これは焦点距離が長くなるにしたがって変化が大きくなる。
     glUniform1f(focalLoc, -50.0f / (window.getWheel() - 50.0f));
 
+    // 視線の回転行列
+    glUniformMatrix4fv(rotationLoc, 1, GL_FALSE, window.getLeftTrackball().get());
+
     // テクスチャの半径と中心位置
     //   circle[0] = イメージサークルの x 方向の半径
     //   circle[1] = イメージサークルの y 方向の半径
@@ -174,9 +177,6 @@ int main()
       capture_circle[3] + (window.getShiftArrowY() + window.getControlArrowY()) * 0.001f
     };
     glUniform4fv(circleLoc, 1, circle);
-
-    // 視線の回転行列
-    glUniformMatrix4fv(rotationLoc, 1, GL_FALSE, window.getLeftTrackball().get());
 
     // キャプチャした画像をテクスチャに転送する
     glActiveTexture(GL_TEXTURE0);
