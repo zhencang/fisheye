@@ -13,10 +13,10 @@ uniform vec2 gap;
 // スクリーンの大きさと中心位置
 uniform vec4 screen;
 
-// スクリーンまでの焦点距離
+// 焦点距離
 uniform float focal;
 
-// イメージサークルの半径と中心位置
+// 背景テクスチャの半径と中心位置
 uniform vec4 circle;
 
 // スクリーンを回転する変換行列
@@ -28,10 +28,10 @@ uniform sampler2D image;
 // テクスチャのサイズ
 vec2 size = textureSize(image, 0);
 
-// イメージサークルのテクスチャ空間上のスケール
+// 背景テクスチャのテクスチャ空間上のスケール
 vec2 scale = vec2(0.5 * size.y / size.x, -0.5) * screen.st / circle.st;
 
-// イメージサークルのテクスチャ空間上の中心位置
+// 背景テクスチャのテクスチャ空間上の中心位置
 vec2 center = circle.pq + 0.5;
 
 // テクスチャ座標
