@@ -25,17 +25,13 @@ uniform sampler2D image;
 // 背景テクスチャのサイズ
 vec2 size = textureSize(image, 0);
 
-// 背景テクスチャのテクスチャ空間上の半径と中心
-vec2 radius = circle.st * vec2(0.25, 0.25 * size.x / size.y);
-vec2 center = vec2(radius.s - circle.p, radius.t - circle.q);
+// 背景テクスチャの前方カメラ像のテクスチャ空間上の半径と中心
+vec2 radius_f = circle.st * vec2(-0.25, 0.25 * size.x / size.y);
+vec2 center_f = vec2(radius_f.s - circle.p + 0.5, radius_f.t - circle.q);
 
-// 前後の背景テクスチャのテクスチャ空間上の半径
-vec2 radius_f = vec2(-radius.s, radius.t);
-vec2 radius_b = vec2( radius.s, radius.t);
-
-// 前後の背景テクスチャのテクスチャ空間上の中心
-vec2 center_f = vec2(0.5 - center.s, center.t);
-vec2 center_b = vec2(0.5 + center.s, center.t);
+// 背景テクスチャの後方カメラ像のテクスチャ空間上の半径と中心
+vec2 radius_b = vec2(-radius_f.s, radius_f.t);
+vec2 center_b = vec2(center_f.s + 0.5, center_f.t);
 
 // テクスチャ座標
 out vec2 texcoord_f;
@@ -60,7 +56,7 @@ void main(void)
   // 視線ベクトル
   //   position にスクリーンの大きさ screen.st をかけて中心位置 screen.pq を足せば、
   //   スクリーン上の点の位置が得られるから、原点にある視点からこの点に向かう視線は、
-  //   焦点距離 focal を Z 座標に用いて (position, focal) となる。
+  //   焦点距離 focal を Z 座標に用いて (position * screen.st + screen.pq, focal) となる。
   //   これを回転したあと正規化してその方向の視線単位ベクトルを得る。
   vec4 vector = normalize(rotation * vec4(position * screen.st + screen.pq, focal, 0.0));
 

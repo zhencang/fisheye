@@ -35,8 +35,8 @@ void main(void)
   // 視線ベクトル
   //   position にスクリーンの大きさ screen.st をかけて中心位置 screen.pq を足せば、
   //   スクリーン上の点の位置が得られるから、原点にある視点からこの点に向かう視線は、
-  //   焦点距離 focal を Z 座標に用いて (position, focal) となる。
-  //   これを回転したあと正規化してその方向の視線単位ベクトルを得る。
+  //   焦点距離 focal を Z 座標に用いて (position * screen.st + screen.pq, focal) となる。
+  //   これを回転してその方向の視線ベクトルを得る。
   vector = rotation * vec4(position * screen.st + screen.pq, focal, 0.0);
 
   // 頂点位置をそのままラスタライザに送ればクリッピング空間全面に描く

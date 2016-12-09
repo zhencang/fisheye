@@ -53,7 +53,7 @@ void main(void)
   // 視線ベクトル
   //   position にスクリーンの大きさ screen.st をかけて中心位置 screen.pq を足せば、
   //   スクリーン上の点の位置が得られるから、原点にある視点からこの点に向かう視線は、
-  //   焦点距離 focal を Z 座標に用いて (position, focal) となる。
+  //   焦点距離 focal を Z 座標に用いて (position * screen.st + screen.pq, focal) となる。
   //   これを回転したあと正規化してその方向の視線単位ベクトルを得る。
   vec4 vector = normalize(rotation * vec4(position * screen.st + screen.pq, focal, 0.0));
 
