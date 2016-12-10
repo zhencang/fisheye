@@ -56,8 +56,8 @@ void main(void)
   //   焦点距離 focal を Z 座標に用いて (p, focal) となる。
   //   これを回転したあと正規化して、その方向の視線単位ベクトルを得る。
   vec2 p = position * screen.st + screen.pq;
-  vec4 vector = normalize(rotation * vec4(p, focal, 0.0));
+  vec4 vector = normalize(rotation * vec4(p, -focal, 0.0));
 
   // テクスチャ座標
-  texcoord = acos(vector.z) * normalize(vector.xy) * scale + center;
+  texcoord = acos(-vector.z) * normalize(vector.xy) * scale + center;
 }

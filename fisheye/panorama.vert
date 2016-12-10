@@ -41,5 +41,5 @@ void main(void)
   //   焦点距離 focal を Z 座標に用いて (p, focal) となる。
   //   これを回転して、その方向の視線単位ベクトルを得る。
   vec2 p = position * screen.st + screen.pq;
-  vector = rotation * vec4(p, focal, 0.0);
+  vector = rotation * vec4(p, -focal, 0.0);
 }

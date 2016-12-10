@@ -55,7 +55,7 @@ void main(void)
   //   スクリーン上の点の位置 p が得られるから、原点にある視点からこの点に向かう視線は、
   //   焦点距離 focal を Z 座標に用いて (p, focal) となる。
   vec2 p = position * screen.st + screen.pq;
-  vec4 vector = vec4(p, focal, 0.0);
+  vec4 vector = vec4(p, -focal, 0.0);
 
   // テクスチャ座標
   texcoord = vector.xy * scale + center;

@@ -42,7 +42,7 @@ class CamCv
       gain = static_cast<GLsizei>(camera.get(CV_CAP_PROP_GAIN));
       exposure = static_cast<GLsizei>(camera.get(CV_CAP_PROP_EXPOSURE) * 10.0);
 
-      // macOS ‚¾‚Æ‚¹‚Á‚Ä‚Å‚«‚Ä‚à 0 ‚ª•Ô‚Á‚Ä‚­‚éH
+      // macOS ‚¾‚Æİ’è‚Å‚«‚Ä‚à 0 ‚ª•Ô‚Á‚Ä‚­‚éH
       if (width == 0) width = initial_width;
       if (height == 0) height = initial_height;
 
