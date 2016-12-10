@@ -24,10 +24,10 @@ struct ExpansionShader
 const ExpansionShader shader_type[] =
 {
   // 0: ’Êí‚ÌƒJƒƒ‰
-  { "fixed.vert",     "normal.frag",   0,  0, 1.0f, 1.0f, 0.0f, 0.0f },
+  { "fixed.vert",     "normal.frag",    640,  480, 1.0f, 1.0f, 0.0f, 0.0f },
 
   // 1: ’Êí‚ÌƒJƒƒ‰‚Å‹“_‚ğ‰ñ“]
-  { "rectangle.vert", "normal.frag",   0,  0, 1.0f, 1.0f, 0.0f, 0.0f },
+  { "rectangle.vert", "normal.frag",    640,  480, 1.0f, 1.0f, 0.0f, 0.0f },
 
   // 2: ³‹—‰~“›}–@‚Ì‰æ‘œ (cü‚ğÁ‚·‚É‚Í GL_CLAMP_TO_BORDER ‚ğ GL_REPEAT ‚É‚µ‚Ä‚­‚¾‚³‚¢)
   { "panorama.vert",  "panorama.frag", 1280,  720, 1.0f, 1.0f, 0.0f, 0.0f },

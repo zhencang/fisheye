@@ -44,7 +44,7 @@ const int capture_fps(0);
 const float *const capture_circle(shader_type[shader_selection].circle);
 
 // ƒƒbƒVƒ…‚ÌŠiq“_”
-const int screen_samples(1200);
+const int screen_samples(1271);
 
 // ”wŒiF
 const GLfloat background[] = { 0.0f, 0.0f, 0.0f, 0.0f };
