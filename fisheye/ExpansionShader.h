@@ -24,10 +24,10 @@ struct ExpansionShader
 const ExpansionShader shader_type[] =
 {
   // 0: 通常のカメラ
-  { "fixed.vert",     "normal.frag",   1280,  720, 1.0f, 1.0f, 0.0f, 0.0f },
+  { "fixed.vert",     "normal.frag",   0,  0, 1.0f, 1.0f, 0.0f, 0.0f },
 
   // 1: 通常のカメラで視点を回転
-  { "rectangle.vert", "normal.frag",   1280,  720, 1.0f, 1.0f, 0.0f, 0.0f },
+  { "rectangle.vert", "normal.frag",   0,  0, 1.0f, 1.0f, 0.0f, 0.0f },
 
   // 2: 正距円筒図法の画像 (縦線を消すには GL_CLAMP_TO_BORDER を GL_REPEAT にしてください)
   { "panorama.vert",  "panorama.frag", 1280,  720, 1.0f, 1.0f, 0.0f, 0.0f },
@@ -35,10 +35,10 @@ const ExpansionShader shader_type[] =
   // 3: 180°魚眼カメラ : 3.1415927 / 2 (≒ 180°/ 2)
   { "fisheye.vert",   "normal.frag",   1280,  720, 1.570796327f, 1.570796327f, 0.0f, 0.0f },
 
-  // 4: 185°魚眼カメラ (FUJINON FE185C046HA-1 + SENTECH STC-MCE132U3V) : 3.2288591 / 2 (≒ 185°/ 2)
-  { "fisheye.vert",   "normal.frag",   1280, 1024, 1.614429558f, 1.614429558f, 0.0f, 0.0f },
+  // 4: 180°魚眼カメラ (FUJINON FE185C046HA-1 + SENTECH STC-MCE132U3V) : 3.5779249 / 2 (≒ 205°/ 2)
+  { "fisheye.vert",   "normal.frag",   1280, 1024, 1.797689129f, 1.797689129f, 0.0f, 0.0f },
 
-  // 5: 220°魚眼カメラ (Kodak PIXPRO SP360 4K, 手振れ補正あり) : 3.5953783 / 2 (≒ 206°/ 2)
+  // 5: 206°魚眼カメラ (Kodak PIXPRO SP360 4K, 手振れ補正あり) : 3.5953783 / 2 (≒ 206°/ 2)
   { "fisheye.vert",   "normal.frag",   1440, 1440, 1.797689129f, 1.797689129f, 0.0f, 0.0f },
 
   // 6: 235°魚眼カメラ (Kodak PIXPRO SP360 4K, 手振れ補正なし) : 4.1015237 / 2 (≒ 235°/ 2)

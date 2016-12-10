@@ -25,17 +25,17 @@ uniform sampler2D image;
 // 背景テクスチャのサイズ
 vec2 size = textureSize(image, 0);
 
-// 背景テクスチャの前方カメラ像のテクスチャ空間上の半径と中心
-vec2 radius_f = circle.st * vec2(-0.25, 0.25 * size.x / size.y);
-vec2 center_f = vec2(radius_f.s - circle.p + 0.5, radius_f.t - circle.q);
-
 // 背景テクスチャの後方カメラ像のテクスチャ空間上の半径と中心
-vec2 radius_b = vec2(-radius_f.s, radius_f.t);
-vec2 center_b = vec2(center_f.s + 0.5, center_f.t);
+vec2 radius_b = circle.st * vec2(-0.25, 0.25 * size.x / size.y);
+vec2 center_b = vec2(radius_b.s - circle.p + 0.5, radius_b.t - circle.q);
+
+// 背景テクスチャの前方カメラ像のテクスチャ空間上の半径と中心
+vec2 radius_f = vec2(-radius_b.s, radius_b.t);
+vec2 center_f = vec2(center_b.s + 0.5, center_b.t);
 
 // テクスチャ座標
-out vec2 texcoord_f;
 out vec2 texcoord_b;
+out vec2 texcoord_f;
 
 // 前後のテクスチャの混合比
 out float blend;
@@ -62,19 +62,19 @@ void main(void)
   //   焦点距離 focal を Z 座標に用いて (p, focal) となる。
   //   これを回転したあと正規化して、その方向の視線単位ベクトルを得る。
   vec2 p = position * screen.st + screen.pq;
-  vec4 vector = normalize(rotation * vec4(p, focal, 0.0));
+  vec4 vector = normalize(rotation * vec4(p, -focal, 0.0));
 
   // この方向ベクトルの相対的な仰角
-  //   acos(vector.z) * 2 / π - 1 → [-1, 1]
-  float angle = acos(vector.z) * 0.63661977 - 1.0;
+  //   1 - acos(vector.z) * 2 / π → [-1, 1]
+  float angle = 1.0 - acos(vector.z) * 0.63661977;
 
   // 前後のテクスチャの混合比
-  blend = smoothstep(0.02, -0.02, angle);
+  blend = smoothstep(-0.02, 0.02, angle);
 
   // この方向ベクトルの yx 上での方向ベクトル
   vec2 orientation = normalize(vector.yx) * 0.885;
 
   // テクスチャ座標
-  texcoord_f = (1.0 - angle) * orientation * radius_f + center_f;
-  texcoord_b = (1.0 + angle) * orientation * radius_b + center_b;
+  texcoord_b = (1.0 - angle) * orientation * radius_b + center_b;
+  texcoord_f = (1.0 + angle) * orientation * radius_f + center_f;
 }
