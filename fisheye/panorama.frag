@@ -29,10 +29,12 @@ layout (location = 0) out vec4 fc;
 void main(void)
 {
   // 視線ベクトルを正規化する
-  vec4 v = normalize(vector);
+  vec4 orientation = normalize(vector);
 
   // テクスチャ座標を求める
-  vec2 texcoord = atan(v.xy, vec2(v.z, length(v.xz))) * scale + center;
+  vec2 u = orientation.xy;
+  vec2 v = vec2(orientation.z, length(orientation.xz));
+  vec2 texcoord = atan(u, v) * scale + center;
 
   // 画素の陰影を求める
   fc = texture(image, texcoord);
