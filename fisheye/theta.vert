@@ -53,6 +53,9 @@ void main(void)
   int y = gl_InstanceID + 1 - (gl_VertexID & 1);
   vec2 position = vec2(x, y) * gap - 1.0;
 
+  // 頂点位置をそのままラスタライザに送ればクリッピング空間全面に描く
+  gl_Position = vec4(position, 0.0, 1.0);
+
   // 視線ベクトル
   //   position にスクリーンの大きさ screen.st をかけて中心位置 screen.pq を足せば、
   //   スクリーン上の点の位置が得られるから、原点にある視点からこの点に向かう視線は、
@@ -70,10 +73,7 @@ void main(void)
   // この方向ベクトルの yx 上での方向ベクトル
   vec2 orientation = normalize(vector.yx) * 0.885;
 
-  // 前後のテクスチャの色をサンプリングする
+  // テクスチャ座標
   texcoord_f = (1.0 - angle) * orientation * radius_f + center_f;
   texcoord_b = (1.0 + angle) * orientation * radius_b + center_b;
-
-  // 頂点位置をそのままラスタライザに送ればクリッピング空間全面に描く
-  gl_Position = vec4(position, 0.0, 1.0);
 }
