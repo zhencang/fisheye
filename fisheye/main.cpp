@@ -162,7 +162,7 @@ int main()
     glUniform1f(focalLoc, -50.0f / (window.getWheel() - 50.0f));
 
     // 視線の回転行列
-    glUniformMatrix4fv(rotationLoc, 1, GL_FALSE, window.getLeftTrackball().get());
+    glUniformMatrix4fv(rotationLoc, 1, GL_TRUE, window.getLeftTrackball().get());
 
     // テクスチャの半径と中心位置
     //   circle[0] = イメージサークルの x 方向の半径
