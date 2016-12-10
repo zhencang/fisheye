@@ -38,13 +38,13 @@ class CamCv
       width = static_cast<GLsizei>(camera.get(CV_CAP_PROP_FRAME_WIDTH));
       height = static_cast<GLsizei>(camera.get(CV_CAP_PROP_FRAME_HEIGHT));
 
+      // macOS だと設定できても 0 が返ってくる
+      if (width == 0) width = initial_width;
+      if (height == 0) height = initial_height;
+
       // カメラの利得と露出を取得する
       gain = static_cast<GLsizei>(camera.get(CV_CAP_PROP_GAIN));
       exposure = static_cast<GLsizei>(camera.get(CV_CAP_PROP_EXPOSURE) * 10.0);
-
-      // macOS だと設定できても 0 が返ってくる？
-      if (width == 0) width = initial_width;
-      if (height == 0) height = initial_height;
 
       // キャプチャされる画像のフォーマットを設定する
       format = GL_BGR;
