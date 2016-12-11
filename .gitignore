@@ -31,3 +31,7 @@ Thumbs.db
 *.bak
 *.tmp
 *.swp
+/fisheye/*.obj
+/fisheye/*.mtl
+!/fisheye/bunny.obj
+!/fisheye/bunny.mtl
