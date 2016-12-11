@@ -11,7 +11,7 @@ using namespace gg;
 // ウィンドウ関連の処理
 #include "Window.h"
 
-// 平面展開に使うシェーダ
+// 平面展開の設定一覧
 #include "ExpansionShader.h"
 
 // OpenCV によるビデオキャプチャ
@@ -21,32 +21,32 @@ using namespace gg;
 // 設定
 //
 
-// 使用するシェーダー (ExpansionShader.h の中から選んでください)
+// 背景画像を展開する手法 (ExpansionShader.h の中から選んでください)
 const int shader_selection(1);
 
-// 使用するデバイス
+// 背景画像の取得に使用するデバイス
 const int capture_device(0);
 
-// バーテックスシェーダのソースファイル名
+// 背景画像の展開に使用するバーテックスシェーダのソースファイル名
 const char *const capture_vsrc(shader_type[shader_selection].vsrc);
 
-// フラグメントシェーダのソースファイル名
+// 背景画像の展開に使用するフラグメントシェーダのソースファイル名
 const char *const capture_fsrc(shader_type[shader_selection].fsrc);
 
-// カメラの解像度 (0 ならカメラから取得)
+// 背景画像の取得に使用するカメラの解像度 (0 ならカメラから取得)
 const int capture_width(shader_type[shader_selection].size[0]);
 const int capture_height(shader_type[shader_selection].size[1]);
 
-// カメラのフレームレート (0 ならカメラから取得)
+// 背景画像の取得に使用するカメラのフレームレート (0 ならカメラから取得)
 const int capture_fps(0);
 
-// 投影像の配置
+// 背景画像の対象領域
 const float *const capture_circle(shader_type[shader_selection].circle);
 
-// メッシュの格子点数
+// 背景画像の描画に用いるメッシュの格子点数
 const int screen_samples(1271);
 
-// 背景色
+// 背景色は表示されないが合成時に 0 にしておく必要がある
 const GLfloat background[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 //
