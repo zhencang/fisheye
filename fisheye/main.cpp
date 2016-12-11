@@ -34,8 +34,8 @@ const char *const capture_vsrc(shader_type[shader_selection].vsrc);
 const char *const capture_fsrc(shader_type[shader_selection].fsrc);
 
 // 背景画像の取得に使用するカメラの解像度 (0 ならカメラから取得)
-const int capture_width(shader_type[shader_selection].size[0]);
-const int capture_height(shader_type[shader_selection].size[1]);
+const int capture_width(shader_type[shader_selection].width);
+const int capture_height(shader_type[shader_selection].height);
 
 // 背景画像の取得に使用するカメラのフレームレート (0 ならカメラから取得)
 const int capture_fps(0);
