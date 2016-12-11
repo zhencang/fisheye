@@ -14,7 +14,7 @@ struct ExpansionShader
   const char *fsrc;
 
   // カメラの解像度
-  const int size[2];
+  const int width, height;
 
   // イメージサークルの半径と中心位置
   const float circle[4];
