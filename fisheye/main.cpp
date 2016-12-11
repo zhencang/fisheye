@@ -40,7 +40,7 @@ const int capture_height(shader_type[shader_selection].size[1]);
 // 背景画像の取得に使用するカメラのフレームレート (0 ならカメラから取得)
 const int capture_fps(0);
 
-// 背景画像の対象領域
+// 背景画像の関心領域
 const float *const capture_circle(shader_type[shader_selection].circle);
 
 // 背景画像の描画に用いるメッシュの格子点数
@@ -87,14 +87,14 @@ int main()
   // ウィンドウが開けたかどうか確かめる
   if (!window.get())
   {
-    // ウィンドウがひらけなかった
+    // ウィンドウが開けなかった
     std::cerr << "Can't open GLFW window.\n";
     return EXIT_FAILURE;
   }
 
-  // 図形描画用のシェーダプログラムを読み込む
-  const GLuint shader(ggLoadShader(capture_vsrc, capture_fsrc));
-  if (!shader)
+  // 背景描画用のシェーダプログラムを読み込む
+  const GLuint expansion(ggLoadShader(capture_vsrc, capture_fsrc));
+  if (!expansion)
   {
     // シェーダが読み込めなかった
     std::cerr << "Can't create program object.\n";
@@ -102,18 +102,14 @@ int main()
   }
 
   // uniform 変数の場所を指定する
-  const GLuint gapLoc(glGetUniformLocation(shader, "gap"));
-  const GLuint screenLoc(glGetUniformLocation(shader, "screen"));
-  const GLuint focalLoc(glGetUniformLocation(shader, "focal"));
-  const GLuint rotationLoc(glGetUniformLocation(shader, "rotation"));
-  const GLuint circleLoc(glGetUniformLocation(shader, "circle"));
-  const GLuint imageLoc(glGetUniformLocation(shader, "image"));
+  const GLuint gapLoc(glGetUniformLocation(expansion, "gap"));
+  const GLuint screenLoc(glGetUniformLocation(expansion, "screen"));
+  const GLuint focalLoc(glGetUniformLocation(expansion, "focal"));
+  const GLuint rotationLoc(glGetUniformLocation(expansion, "rotation"));
+  const GLuint circleLoc(glGetUniformLocation(expansion, "circle"));
+  const GLuint imageLoc(glGetUniformLocation(expansion, "image"));
 
-  // 隠面消去を設定する
-  glDisable(GL_DEPTH_TEST);
-  glDisable(GL_CULL_FACE);
-
-  // テクスチャを作成する
+  // 背景用のテクスチャを作成する
   //   ポリゴンでビューポート全体を埋めるので背景は表示されない。
   //   GL_CLAMP_TO_BORDER にしておけばテクスチャの外が GL_TEXTURE_BORDER_COLOR になるので、これが背景色になる。
   const GLuint image([]() { GLuint image; glGenTextures(1, &image); return image; } ());
@@ -125,15 +121,19 @@ int main()
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
   glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, background);
 
-  // 図形を作成する
+  // 背景描画のためのメッシュを作成する
   //   頂点座標値を vertex shader で生成するので VBO は必要ない
-  const GLuint shape([]() { GLuint shape; glGenVertexArrays(1, &shape); return shape; } ());
+  const GLuint mesh([]() { GLuint mesh; glGenVertexArrays(1, &mesh); return mesh; } ());
+
+  // 隠面消去を設定する
+  glDisable(GL_DEPTH_TEST);
+  glDisable(GL_CULL_FACE);
 
   // ウィンドウが開いている間繰り返す
   while (!window.shouldClose())
   {
-    // シェーダプログラムの使用を開始する
-    glUseProgram(shader);
+    // 背景画像の展開に用いるシェーダプログラムの使用を開始する
+    glUseProgram(expansion);
 
     // スクリーンの矩形の格子点数
     //   標本点の数 (頂点数) n = x * y とするとき、これにアスペクト比 a = x / y をかければ、
@@ -161,7 +161,7 @@ int main()
     //   これは焦点距離が長くなるにしたがって変化が大きくなる。
     glUniform1f(focalLoc, -50.0f / (window.getWheel() - 50.0f));
 
-    // 視線の回転行列
+    // 背景に対する視線の回転行列
     glUniformMatrix4fv(rotationLoc, 1, GL_TRUE, window.getLeftTrackball().get());
 
     // テクスチャの半径と中心位置
@@ -178,7 +178,7 @@ int main()
     };
     glUniform4fv(circleLoc, 1, circle);
 
-    // キャプチャした画像をテクスチャに転送する
+    // キャプチャした画像を背景用のテクスチャに転送する
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, image);
     camera.transmit();
@@ -186,8 +186,8 @@ int main()
     // テクスチャユニットを指定する
     glUniform1i(imageLoc, 0);
 
-    // 図形を描画する
-    glBindVertexArray(shape);
+    // メッシュを描画する
+    glBindVertexArray(mesh);
     glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, slices * 2, stacks);
 
     // カラーバッファを入れ替えてイベントを取り出す
