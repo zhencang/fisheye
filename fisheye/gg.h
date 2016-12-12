@@ -5920,7 +5920,7 @@ namespace gg
     //!   \param shader GgSimpleShader 型のシェーダのオブジェクト.
     //!   \param first 描画する最初のパーツ番号.
     //!   \param count 描画するパーツの数.
-    virtual void draw(const GgSimpleShader &shader = nullptr, GLint first = 0, GLsizei count = 0) const
+    virtual void draw(const GgSimpleShader &shader, GLint first = 0, GLsizei count = 0) const
     {
       draw(&shader, first, count);
     }
