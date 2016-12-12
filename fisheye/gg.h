@@ -4691,20 +4691,20 @@ namespace gg
 
     //! \brief 唯一のオブジェクトかどうか調べる.
     //!   \return 唯一のオブジェクトなら真.
-    bool last() const
+    bool unique() const
     {
       return ref->count == 1;
     }
 
     //! \brief 参照カウンタの新規作成.
     //!   \return 唯一のオブジェクトなら真.
-    bool newCounter()
+    bool reset()
     {
       // 唯一のオブジェクトかどうか調べる
-      bool status(last());
+      bool status(--ref->count == 0);
 
       // 元の参照カウンタの管理対象から外す
-      if (--ref->count == 0) delete ref;
+      if (status) delete ref;
 
       // 新しい参照カウンタを作成して, それに付け替える
       ref = new GgCounter;
@@ -4758,7 +4758,7 @@ namespace gg
     virtual ~GgTexture()
     {
       // 参照しているオブジェクトが一つだけならテクスチャを削除する
-      if (last())
+      if (unique())
       {
         glBindTexture(GL_TEXTURE_2D, 0);
         glDeleteTextures(1, &texture);
@@ -4807,7 +4807,6 @@ namespace gg
     }
 
     //! \brief テクスチャの使用開始 (このテクスチャを使用する際に呼び出す).
-    //!   \param unit 使用するテクスチャユニット番号（0～）.
     void use() const
     {
       glBindTexture(GL_TEXTURE_2D, texture);
@@ -4885,7 +4884,7 @@ namespace gg
     virtual ~GgBuffer<T>()
     {
       // 参照しているオブジェクトが一つだけならバッファを削除する
-      if (last())
+      if (unique())
       {
         glBindBuffer(target, 0);
         glDeleteBuffers(1, &buffer);
@@ -5447,7 +5446,7 @@ namespace gg
     virtual ~GgShader()
     {
       // 参照しているオブジェクトが一つだけならシェーダを削除する
-      if (program != 0 && last())
+      if (program != 0 && unique())
       {
         glUseProgram(0);
         glDeleteProgram(program);
@@ -5487,7 +5486,7 @@ namespace gg
     //!   \param newProgram 別に作成したシェーダのプログラム名.
     void setProgram(GLuint newProgram)
     {
-      if (program != 0 && newCounter())
+      if (program != 0 && reset())
       {
         glUseProgram(0);
         glDeleteProgram(program);
@@ -5912,6 +5911,18 @@ namespace gg
     }
 
     //! \brief Wavefront OBJ 形式のデータを描画する手続き.
+    //!   \param shader GgSimpleShader 型のシェーダのオブジェクトのポインタ.
+    //!   \param first 描画する最初のパーツ番号.
+    //!   \param count 描画するパーツの数.
     virtual void draw(const GgSimpleShader *shader = nullptr, GLint first = 0, GLsizei count = 0) const;
+
+    //! \brief Wavefront OBJ 形式のデータを描画する手続き.
+    //!   \param shader GgSimpleShader 型のシェーダのオブジェクト.
+    //!   \param first 描画する最初のパーツ番号.
+    //!   \param count 描画するパーツの数.
+    virtual void draw(const GgSimpleShader &shader = nullptr, GLint first = 0, GLsizei count = 0) const
+    {
+      draw(&shader, first, count);
+    }
   };
 }

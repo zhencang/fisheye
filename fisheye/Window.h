@@ -119,6 +119,9 @@ public:
   // 画面クリア
   void clear()
   {
+    // ウィンドウ全体をビューポートにする
+    glViewport(0, 0, width, height);
+
     // カラーバッファとデプスバッファを消去する
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
@@ -158,9 +161,6 @@ public:
 
     if (instance)
     {
-      // ウィンドウ全体をビューポートにする
-      glViewport(0, 0, width, height);
-
       // ウィンドウのサイズを保存する
       instance->width = width;
       instance->height = height;
